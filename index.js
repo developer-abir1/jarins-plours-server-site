@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express();
 const { MongoClient } = require('mongodb');
-const port = process.env.PROT || 4000
+const port = process.env.PORT || 4000
 const cors = require('cors')
 require('dotenv').config()
 const ObjectId = require('mongodb').ObjectId;
@@ -86,6 +86,6 @@ app.get('/', (req, res) => {
     res.send('Jerins plour server site')
 })
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+app.listen(process.env.PORT || port, () => {
+    console.log(`${port}`, 'server connected')
 })
