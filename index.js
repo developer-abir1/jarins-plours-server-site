@@ -24,7 +24,7 @@ async function run() {
         const database = client.db("booking")
         const bookinCollaction = database.collection("userBooking")
         const userCollaction = database.collection("users")
-
+        const addServiceCollaction = database.collection("addService")
 
         app.get("/appointment", async (req, res) => {
             const email = req.query.email
@@ -52,6 +52,8 @@ async function run() {
             res.json(result)
 
         })
+        // user reviwe
+        app.post("/userReviwe")
 
         // save user 
         app.post("/users", async (req, res) => {
@@ -69,6 +71,28 @@ async function run() {
             const updateDoc = { $set: user };
             const result = await userCollaction.updateOne(filter, updateDoc, options);
             res.json(result);
+        })
+
+        // add service 
+        app.get("/addService", async (req, res) => {
+
+            const carsor = addServiceCollaction.find()
+            const result = await carsor.toArray()
+            res.json(result)
+
+        })
+        // delete service 
+        app.delete("/addService/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await addServiceCollaction.deleteOne(query)
+            res.send(result)
+        })
+        // addmin add service 
+        app.post("/addService", async (req, res) => {
+            const addService = req.body;
+            const result = await addServiceCollaction.insertOne(addService)
+            res.json(result)
         })
 
 
