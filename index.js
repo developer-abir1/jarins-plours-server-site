@@ -25,6 +25,7 @@ async function run() {
         const bookinCollaction = database.collection("userBooking")
         const userCollaction = database.collection("users")
         const addServiceCollaction = database.collection("addService")
+        const reviewCollaction = database.collection("review")
 
         app.get("/appointment", async (req, res) => {
             const email = req.query.email
@@ -52,8 +53,20 @@ async function run() {
             res.json(result)
 
         })
-        // user reviwe
-        app.post("/userReviwe")
+
+        // user reviwe get item 
+        app.get("/userReview", async (req, res) => {
+            const carsur = reviewCollaction.find().toArray()
+            const result = await carsur
+            res.json(result)
+        })
+
+        // user reviwe post 
+        app.post("/userReview", async (req, res) => {
+            const reviwe = req.body
+            const result = await reviewCollaction.insertOne(reviwe)
+            res.json(result)
+        })
 
         // save user 
         app.post("/users", async (req, res) => {
