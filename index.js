@@ -68,6 +68,14 @@ async function run() {
             res.json(result)
         })
 
+
+
+        app.get("/users", async (req, res) => {
+            const carsor = userCollaction.find({})
+            const result = await carsor.toArray()
+            res.json(result)
+        })
+
         // save user 
         app.post("/users", async (req, res) => {
             const saveUser = req.body
@@ -75,6 +83,16 @@ async function run() {
             res.json(result)
         })
 
+        app.get("/users/:email", async (req, res) => {
+            const email = req.params.email;
+            const quary = { email: email }
+            const user = await userCollaction.findOne(quary)
+            let isAdmin = false
+            if (user?.role === "admin") {
+                isAdmin = true
+            }
+            res.json({ admin: isAdmin })
+        })
 
         // seve user google
         app.put("/users", async (req, res) => {
@@ -84,6 +102,15 @@ async function run() {
             const updateDoc = { $set: user };
             const result = await userCollaction.updateOne(filter, updateDoc, options);
             res.json(result);
+        })
+
+        // make an admin 
+        app.put("/users/admin", async (req, res) => {
+            const user = req.body
+            const filter = { email: user.email }
+            const updateDoc = { $set: { role: "admin" } }
+            const result = await userCollaction.updateOne(filter, updateDoc)
+            res.json(result)
         })
 
         // add service 
