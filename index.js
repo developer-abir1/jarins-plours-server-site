@@ -107,6 +107,7 @@ async function run() {
         // make an admin 
         app.put("/users/admin", async (req, res) => {
             const user = req.body
+
             const filter = { email: user.email }
             const updateDoc = { $set: { role: "admin" } }
             const result = await userCollaction.updateOne(filter, updateDoc)
@@ -121,6 +122,14 @@ async function run() {
             res.json(result)
 
         })
+
+        // service id sigle Service
+        app.get("/addService/:id", async (req, res) => {
+            const id = req.params.id
+            const quary = { _id: ObjectId(id) }
+            const result = await addServiceCollaction.findOne(quary)
+            res.json(result)
+        })
         // delete service 
         app.delete("/addService/:id", async (req, res) => {
             const id = req.params.id
@@ -133,6 +142,28 @@ async function run() {
             const addService = req.body;
             const result = await addServiceCollaction.insertOne(addService)
             res.json(result)
+        })
+
+        // update service 
+        app.put("/addService/:id", async (req, res) => {
+            const id = req.params.id
+
+            const updateService = req.body
+            const filters = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            // create a document that sets the plot of the movie
+            const updateDoc = {
+                $set: {
+                    title: updateService.title,
+                    price: updateService.price,
+                    photo: updateService.photo,
+                    discription: updateService.discription
+                },
+            };
+
+            const result = await addServiceCollaction.updateOne(filters, updateDoc, options)
+            res.json(result)
+
         })
 
 
